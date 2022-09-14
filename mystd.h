@@ -9,11 +9,19 @@ namespace mystd{
     protected:
         char *str = nullptr; //c_str
         size_t sz = 0; //size
+        size_t capacity = 0;
+
+        void fillFields(size_t sz_, size_t capacity_);
 
     public:
+
         MyString() = default; //default constructor
 
         MyString(size_t sz, char ch); //init class with sz of characters
+
+        MyString(const char sen[], size_t len); //init class with count characters of  “char string”
+
+        explicit MyString(const char sen[]);
 
         MyString(const MyString& s); //copy constructor
 
