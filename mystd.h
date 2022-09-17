@@ -2,6 +2,7 @@
 #define BANNIKOV_V_MYSTRING_MYSTD_H
 #include <cstring>
 #include <algorithm>
+#include <string>
 
 namespace mystd{
 
@@ -25,6 +26,8 @@ namespace mystd{
 
         MyString(const MyString& s); //copy constructor
 
+        explicit MyString(const std::string& s);
+
         MyString(MyString&& s) noexcept;// move constructor
 
         MyString(const std::initializer_list<char>& lst); //initializer list constructor
@@ -35,10 +38,29 @@ namespace mystd{
 
         MyString& operator=(const MyString& s); //copy assignment
 
+        MyString& operator=(const char sen[]);
+
+        MyString& operator=(const std::string& s);
+
+        MyString& operator=(char c);
+
         MyString& operator=(MyString&& s); //move assigment
 
         void swap(MyString& s); // swap function for copy-and-swap idiom
 
+        MyString operator+(MyString& s);
+
+        MyString operator+(const char sen[]);
+
+        MyString operator+(const std::string& s);
+
+        MyString& operator+=(const char sen[]);
+
+        MyString& operator+=(MyString& s);
+
+        MyString& operator+=(const std::string& s);
+
+        char operator[](size_t index);
     };
 }
 

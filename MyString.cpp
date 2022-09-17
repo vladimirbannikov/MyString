@@ -37,6 +37,9 @@ MyString(const std::initializer_list<char>& lst) {
 }
 
 mystd::MyString::
+MyString(const std::string& s): MyString(s.c_str(), s.size()){}
+
+mystd::MyString::
 MyString(size_t sz): MyString(sz, '\0'){}
 
 mystd::MyString::
@@ -52,9 +55,71 @@ operator=(const mystd::MyString &s) {
     return *this;
 }
 
+mystd::MyString &mystd::MyString::
+operator=(const char sen[]){
+    MyString copy_s(sen);
+    swap(copy_s);
+    return *this;
+}
+
+mystd::MyString &mystd::MyString::
+operator=(const std::string& s) {
+    return (*this = s.c_str());
+}
+
+mystd::MyString &mystd::MyString::
+operator=(char c) {
+    char *cTemp = &c;
+    return (*this = cTemp);
+}
+
 void mystd::MyString::
 swap(MyString& s){
     std::swap(str, s.str);
     std::swap(sz,s.sz);
     std::swap(capacity, s.capacity);
+}
+
+mystd::MyString mystd::MyString::
+operator+(const char *sen) {
+    MyString copy_s(this->sz + strlen(sen));
+    memcpy(copy_s.str, this->str, this->sz);
+    memcpy(copy_s.str + this->sz, sen, strlen(sen));
+    return copy_s;
+}
+
+mystd::MyString mystd::MyString::
+operator+(MyString& s){
+    return (*this + s.str);
+}
+
+mystd::MyString mystd::MyString::
+operator+(const std::string& s){
+    return (*this + s.c_str());
+}
+
+mystd::MyString &mystd::MyString::
+operator+=(const char *sen) {
+    MyString copy_s(this->sz + strlen(sen));
+    memcpy(copy_s.str, this->str, this->sz);
+    memcpy(copy_s.str + this->sz, sen, strlen(sen));
+    swap(copy_s);
+    return *this;
+}
+
+mystd::MyString &mystd::MyString::
+operator+=(MyString& s){
+    return (*this += s.str);
+}
+
+mystd::MyString &mystd::MyString::
+operator+=(const std::string& s){
+    return (*this += s.c_str());
+}
+
+char mystd::MyString::
+operator[](size_t index) { // there are no indexes less than 0 with type size_t
+    if(index >= this->sz)
+        return '\0';
+    else return this->str[index];
 }
