@@ -1,53 +1,56 @@
 #include "mystd.h"
 
-void mystd::MyString::
-fillFields(uint16_t sz_, uint16_t capacity_) {
+using namespace mystd;
+
+void MyString::
+fillFields(size_t sz_, size_t capacity_) {
     this->sz = sz_;
     this->cap = capacity_;
     this->str = new char[cap];
+    this->str[sz] = '\0';
 }
 
-mystd::MyString::
-MyString(uint16_t sz, char ch){
+MyString::
+MyString(size_t sz, char ch){
     fillFields(sz, sz + 1);
     memset(str, ch, sz);
 }
 
-mystd::MyString::
+MyString::
 MyString(const MyString& s){
     fillFields(s.sz, s.cap);
     memcpy(str,s.str,cap);
 }
 
-mystd::MyString::
-MyString(const char sen[], uint16_t len){
-    uint16_t minSize = std::min((uint16_t)strlen(sen), len);
+MyString::
+MyString(const char sen[], size_t len){
+    size_t minSize = std::min((size_t)strlen(sen), len);
     fillFields(minSize, minSize + 1);
     memcpy(str, sen, sz);
 }
 
-mystd::MyString::
+MyString::
 MyString(const char sen[]):
         MyString(sen, strlen(sen)){}
 
-mystd::MyString::
+MyString::
 MyString(const std::initializer_list<char>& lst) {
     fillFields(lst.size(), lst.size() + 1);
     std::copy(lst.begin(), lst.end(), str);
 }
 
-mystd::MyString::
+MyString::
 MyString(const std::string& s): MyString(s.c_str(), s.size()){}
 
-mystd::MyString::
-MyString(uint16_t sz): MyString(sz, '\0'){}
+MyString::
+MyString(size_t sz): MyString(sz, '\0'){}
 
-mystd::MyString::
+MyString::
 ~MyString(){
     delete[] str;
 }
 
-mystd::MyString &mystd::MyString::
+MyString &mystd::MyString::
 operator=(const mystd::MyString &s) {
     if(this == &s) return *this;
     MyString copy_s(s);
@@ -55,7 +58,7 @@ operator=(const mystd::MyString &s) {
     return *this;
 }
 
-mystd::MyString &mystd::MyString::
+MyString &mystd::MyString::
 operator=(const char sen[]){
     MyString copy_s(sen);
     swap(copy_s);
@@ -67,26 +70,26 @@ operator=(const std::string& s) {
     return (*this = s.c_str());
 }
 
-mystd::MyString &mystd::MyString::
+MyString &mystd::MyString::
 operator=(char c) {
     char *cTemp = &c;
     return (*this = cTemp);
 }
 
-void mystd::MyString::
+void MyString::
 swap(MyString& s){
     std::swap(str, s.str);
     std::swap(sz,s.sz);
     std::swap(cap, s.cap);
 }
 
-mystd::MyString mystd::MyString::
+MyString MyString::
 operator+(const char *sen) {
-    uint16_t senLength = strlen(sen);
+    size_t senLength = strlen(sen);
     MyString copy_s;
-    if(senLength + this->sz >= UINT16_MAX){
-        copy_s.fillFields(UINT16_MAX - 1, UINT16_MAX);
-        senLength = UINT16_MAX - this->sz - 1;
+    if(senLength + this->sz >= SIZE_MAX){
+        copy_s.fillFields(SIZE_MAX - 1, SIZE_MAX);
+        senLength = SIZE_MAX - this->sz - 1;
     }
     else copy_s.fillFields(senLength + this->sz, senLength + this->sz + 1);
     memcpy(copy_s.str, this->str, this->sz);
@@ -94,17 +97,17 @@ operator+(const char *sen) {
     return copy_s;
 }
 
-mystd::MyString mystd::MyString::
+MyString MyString::
 operator+(MyString& s){
     return (*this + s.str);
 }
 
-mystd::MyString mystd::MyString::
+MyString MyString::
 operator+(const std::string& s){
     return (*this + s.c_str());
 }
 
-mystd::MyString &mystd::MyString::
+MyString &MyString::
 operator+=(const char *sen) {
     MyString copy_s(this->sz + strlen(sen));
     memcpy(copy_s.str, this->str, this->sz);
@@ -113,29 +116,29 @@ operator+=(const char *sen) {
     return *this;
 }
 
-mystd::MyString &mystd::MyString::
+MyString &MyString::
 operator+=(MyString& s){
     return (*this += s.str);
 }
 
-mystd::MyString &mystd::MyString::
+MyString &MyString::
 operator+=(const std::string& s){
     return (*this += s.c_str());
 }
 
-char mystd::MyString::
-operator[](uint16_t index) { // there are no indexes less than 0 with type uint16_t
+char MyString::
+operator[](size_t index) { // there are no indexes less than 0 with type SIZE_MAX
     if(index >= this->sz)
         return '\0';
     else return this->str[index];
 }
 
-char mystd::MyString::
-compareStr(const char *sen1, uint16_t sen1Size, const char *sen2, uint16_t sen2Size) const {
+char MyString::
+compareStr(const char *sen1, size_t sen1Size, const char *sen2, size_t sen2Size) const {
     if(sen1Size > sen2Size) return 1;
     else if(sen1Size < sen2Size) return -1;
     else{
-        for(uint16_t i = 0; i < sen1Size; i++){
+        for(size_t i = 0; i < sen1Size; i++){
             if(sen1[i] > sen2[i]) return 1;
             else if(sen1[i] < sen2[i]) return -1;
         }
@@ -143,75 +146,76 @@ compareStr(const char *sen1, uint16_t sen1Size, const char *sen2, uint16_t sen2S
     return 0;
 }
 
-bool mystd::MyString::
+bool MyString::
 operator==(const char *sen) const{
     char comparison = compareStr(this->str, this->sz, sen, strlen(sen));
     return comparison == 0;
 }
 
-bool mystd::MyString::
+bool MyString::
 operator!=(const char *sen) const{
     return !(*this == sen);
 }
 
-std::weak_ordering mystd::MyString::
+std::weak_ordering MyString::
 operator<=>(const char *sen) const {
     char comparison = compareStr(this->str, this->sz, sen, strlen(sen));
     if(comparison == 0) return std::weak_ordering::equivalent;
     return comparison > 0 ? std::weak_ordering::greater: std::weak_ordering::less;
 }
 
-bool mystd::MyString::
-operator==(const mystd::MyString &s) const {
+bool MyString::
+operator==(const MyString &s) const {
     return (*this == s.str);
 }
 
-bool mystd::MyString::
-operator!=(const mystd::MyString &s) const {
+bool MyString::
+operator!=(const MyString &s) const {
     return (*this != s.str);
 }
 
-std::weak_ordering mystd::MyString::
-operator<=>(const mystd::MyString &s) const {
+std::weak_ordering MyString::
+operator<=>(const MyString &s) const {
     return (*this <=> s.str);
 }
 
-uint16_t mystd::MyString::size() const {
+size_t MyString::size() const {
     return sz;
 }
 
-uint16_t mystd::MyString::length() const {
+size_t MyString::length() const {
     return sz;
 }
 
-const char *mystd::MyString::c_str() const {
+const char *MyString::c_str() const {
     return this->str;
 }
 
-const char* mystd::MyString::data() const {
+const char* MyString::data() const {
     char* temp = new char[this->sz];
     memcpy(temp, this->str, sz);
     return temp;
 }
 
-bool mystd::MyString::empty() const {
+bool MyString::empty() const {
     return sz == 0;
 }
 
-uint16_t mystd::MyString::capacity() const {
+size_t MyString::capacity() const {
     return cap;
 }
 
-void mystd::MyString::shrink_to_fit() {
+void MyString::shrink_to_fit() {
     cap = sz + 1;
     char temp[cap];
     memcpy(temp, str, sz);
     delete[] str;
     str = new char[cap];
     memcpy(str, temp, sz);
+    str[sz] = '\0';
 }
 
-void mystd::MyString::clear() {
+void MyString::clear() {
     delete[] str;
     str = nullptr;
     cap = 0;
@@ -234,5 +238,62 @@ operator>>(std::basic_istream<char> &in, mystd::MyString &s) {
     return in;
 }
 
+int MyString::insert(size_t index, size_t count, char c) {
+    if(index > sz) return EXIT_FAILURE;
+    char *temp = new char[count];
+    memset(temp, c, count);
+    int ret = MyString::insert(index, temp);
+    delete[] temp;
+    return ret;
+}
 
+int MyString::insert(size_t index, const char *sen) {
+    if(index > sz) return EXIT_FAILURE;
+    size_t senLen = strlen(sen);
+    if(sz + senLen > SIZE_MAX) senLen = SIZE_MAX - sz - 1;
+    sz = sz + senLen;
+    cap = sz + 1;
+    char *temp = new char[cap];
+    memcpy(temp, str, index);
+    memcpy(temp + index, sen, senLen);
+    memcpy(temp + index + senLen, str + index, sz - index - senLen);
+    delete[] str;
+    str = new char[cap];
+    memcpy(str, temp, sz);
+    str[sz] = '\0';
+    delete[] temp;
+    return EXIT_SUCCESS;
+}
 
+int MyString::insert(size_t index, const char *sen, size_t count) {
+    if(index > sz) return EXIT_FAILURE;
+    if(count > strlen(sen)) count = strlen(sen);
+    char *temp = new char[count];
+    memcpy(temp, sen, count);
+    int ret = MyString::insert(index, temp);
+    delete[] temp;
+    return ret;
+}
+
+int MyString::insert(size_t index, const std::string &s) {
+    return insert(index, s.c_str());
+}
+
+int MyString::insert(size_t index, const std::string &s, size_t count) {
+    return insert(index, s.c_str(), count);
+}
+
+int MyString::erase(size_t index, size_t count) {
+    if(index > sz) return EXIT_FAILURE;
+    if(index + count > sz) count = sz - index;
+    char *temp = new char[cap];
+    memcpy(temp, str, index);
+    memcpy(temp + index, str + index + count, sz - index - count);
+    sz = sz - count;
+    delete[] str;
+    str = new char[cap];
+    memset(str, '\0', cap);
+    memcpy(str, temp, sz);
+    delete[] temp;
+    return EXIT_SUCCESS;
+}

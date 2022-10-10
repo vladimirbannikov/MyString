@@ -6,26 +6,27 @@
 #include <compare>
 #include <ostream>
 #include <istream>
+#include <memory>
 
 namespace mystd{
 
     class MyString{
     protected:
         char *str = nullptr; //c_str (actually it's implemented with a list of chars)
-        uint16_t sz = 0; //size
-        uint16_t cap = 0;
+        size_t sz = 0; //size
+        size_t cap = 0;
 
-        void fillFields(uint16_t sz_, uint16_t capacity_);
+        void fillFields(size_t sz_, size_t capacity_);
 
-        char compareStr(const char *sen1, uint16_t sen1Size, const char *sen2, uint16_t sen2Size) const;
+        char compareStr(const char *sen1, size_t sen1Size, const char *sen2, size_t sen2Size) const;
 
     public:
 
         MyString() = default; //default constructor
 
-        MyString(uint16_t sz, char ch); //init class with sz of characters
+        MyString(size_t sz, char ch); //init class with sz of characters
 
-        MyString(const char sen[], uint16_t len); //init class with count characters of  “char string”
+        MyString(const char sen[], size_t len); //init class with count characters of  “char string”
 
         explicit MyString(const char sen[]);
 
@@ -37,7 +38,7 @@ namespace mystd{
 
         MyString(const std::initializer_list<char>& lst); //initializer list constructor
 
-        explicit MyString(uint16_t sz); //init class with sz of '\0'
+        explicit MyString(size_t sz); //init class with sz of '\0'
 
         ~MyString(); //destructor
 
@@ -65,7 +66,7 @@ namespace mystd{
 
         MyString& operator+=(const std::string& s);
 
-        char operator[](uint16_t index);
+        char operator[](size_t index);
 
         bool operator==(const char sen[]) const;
 
@@ -79,9 +80,9 @@ namespace mystd{
 
         std::weak_ordering operator<=>(const MyString &s) const;
 
-        uint16_t size() const;
+        size_t size() const;
 
-        uint16_t length() const;
+        size_t length() const;
 
         const char* data() const; //переделать, чтобы избежать утечки памяти (можно добавить поле - char* tempBuff)
 
@@ -89,7 +90,7 @@ namespace mystd{
 
         bool empty() const;
 
-        uint16_t capacity() const;
+        size_t capacity() const;
 
         void shrink_to_fit();
 
@@ -98,6 +99,18 @@ namespace mystd{
         friend std::basic_ostream<char>& operator<<(std::basic_ostream<char>& out, const MyString& s);
 
         friend std::basic_istream<char>& operator>>(std::basic_istream<char>& in, MyString& s); //переделать
+
+        int insert(size_t index, size_t count, char c);
+
+        int insert(size_t index, const char sen[]);
+
+        int insert(size_t index, const char sen[], size_t count);
+
+        int insert(size_t index, const std::string& s);
+
+        int insert(size_t index, const std::string& s, size_t count);
+
+        int erase(size_t index, size_t count);
     };
 }
 
