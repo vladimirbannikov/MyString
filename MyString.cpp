@@ -249,29 +249,36 @@ int MyString::insert(size_t index, size_t count, char c) {
 
 int MyString::insert(size_t index, const char *sen) {
     if(index > sz) return EXIT_FAILURE;
+
     size_t senLen = strlen(sen);
     if(sz + senLen > SIZE_MAX) senLen = SIZE_MAX - sz - 1;
+
     sz = sz + senLen;
     cap = sz + 1;
     char *temp = new char[cap];
     memcpy(temp, str, index);
     memcpy(temp + index, sen, senLen);
     memcpy(temp + index + senLen, str + index, sz - index - senLen);
+
     delete[] str;
     str = new char[cap];
     memcpy(str, temp, sz);
     str[sz] = '\0';
     delete[] temp;
+
     return EXIT_SUCCESS;
 }
 
 int MyString::insert(size_t index, const char *sen, size_t count) {
     if(index > sz) return EXIT_FAILURE;
+
     if(count > strlen(sen)) count = strlen(sen);
+
     char *temp = new char[count];
     memcpy(temp, sen, count);
     int ret = MyString::insert(index, temp);
     delete[] temp;
+
     return ret;
 }
 
@@ -285,15 +292,97 @@ int MyString::insert(size_t index, const std::string &s, size_t count) {
 
 int MyString::erase(size_t index, size_t count) {
     if(index > sz) return EXIT_FAILURE;
+
     if(index + count > sz) count = sz - index;
+
     char *temp = new char[cap];
     memcpy(temp, str, index);
     memcpy(temp + index, str + index + count, sz - index - count);
     sz = sz - count;
+
     delete[] str;
     str = new char[cap];
     memset(str, '\0', cap);
     memcpy(str, temp, sz);
     delete[] temp;
+
     return EXIT_SUCCESS;
 }
+
+int MyString::append(const char *sen, size_t index, size_t count) {
+    return insert(index, sen, count);
+}
+
+int MyString::append(const char sen[]){
+    return insert(sz, sen);
+}
+
+int MyString::append(size_t count, char c) {
+    return insert(sz, count, c);
+}
+
+int MyString::append(const std::string &s) {
+    return insert(sz, s.c_str());
+}
+
+int MyString::append(const std::string &s, size_t index, size_t count) {
+    return insert(index, s.c_str(), count);
+}
+
+int MyString::replace(size_t index, size_t count, const char *sen) {
+    int ret = erase(index, count);
+    if(ret != 0) return ret;
+    else return insert(index, sen);
+}
+
+int MyString::replace(size_t index, size_t count, const std::string &s) {
+    return replace(index, count, s.c_str());
+}
+
+const char* MyString::substr(size_t index, size_t count) {
+    if(index > sz) return "";
+
+    if(index + count > sz) count = sz - index;
+
+    char *temp = new char[count + 1];
+    memcpy(temp, str + index, count);
+    temp[count] = '\0';
+    return temp;
+}
+
+const char *MyString::substr(size_t index) {
+    return substr(index, sz);
+}
+
+size_t MyString::find(const char *sen, size_t index) {
+    if(index >= sz) return sz;
+    size_t senLen = strlen(sen);
+    if(senLen > sz) return sz;
+
+    for (size_t i = index; i <= sz - senLen; i++) {
+        size_t j;
+
+        for (j = 0; j < senLen; j++)
+            if (str[i + j] != sen[j])
+                break;
+
+        if (j == senLen) {
+            return i;
+        }
+    }
+
+    return sz;
+}
+
+size_t MyString::find(const char *sen) {
+    return find(sen, 0);
+}
+
+size_t MyString::find(const std::string &s, size_t index) {
+    return find(s.c_str(), index);
+}
+
+size_t MyString::find(const std::string& s) {
+    return find(s.c_str(), 0);
+}
+
