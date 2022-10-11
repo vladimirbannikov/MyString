@@ -80,7 +80,7 @@ void MyString::
 swap(MyString& s){
     std::swap(str, s.str);
     std::swap(sz,s.sz);
-    std::swap(cap, s.cap);
+    if(cap < s.cap) std::swap(cap, s.cap);
 }
 
 MyString MyString::
@@ -254,8 +254,8 @@ int MyString::insert(size_t index, const char *sen) {
     if(sz + senLen > SIZE_MAX) senLen = SIZE_MAX - sz - 1;
 
     sz = sz + senLen;
-    cap = sz + 1;
-    char *temp = new char[cap];
+    if(cap < sz + 1) cap = sz + 1;
+    char *temp = new char[sz + 1];
     memcpy(temp, str, index);
     memcpy(temp + index, sen, senLen);
     memcpy(temp + index + senLen, str + index, sz - index - senLen);

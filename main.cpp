@@ -4,8 +4,8 @@ int main() {
     mystd::MyString str;
     //mystd::MyString str1("Str");
     //char sen1[] = "asdasdasdasd";
-    mystd::MyString str1(1.2, 'a');
-    std::string str2(1.2, 'a');
+    //mystd::MyString str1(1.2, 'a');
+    //std::string str2(1.2, 'a');
     //mystd::MyString str2("MyStringyString");
    // std::cout << str2.data();
     //std::cout << str2;
@@ -18,5 +18,9 @@ int main() {
     //int i = str2.find(str1.data(), 0);
     //std::cout << str2.substr(5);
     //std::cout << i;
+
+    mystd::MyString str1("St123123123r");
+    mystd::MyString str2("Str");
+    str1 = str2;
     return 0;
 }

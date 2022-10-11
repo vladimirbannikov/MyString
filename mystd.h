@@ -12,13 +12,15 @@ namespace mystd{
 
     class MyString{
     protected:
-        char *str = nullptr; //c_str (actually it's implemented with a list of chars)
+        char *str = nullptr; //c_str
         size_t sz = 0; //size
-        size_t cap = 0;
+        size_t cap = 0; //capacity
 
         void fillFields(size_t sz_, size_t capacity_);
 
         char compareStr(const char *sen1, size_t sen1Size, const char *sen2, size_t sen2Size) const;
+
+        void swap(MyString& s); // swap function for copy-and-swap idiom
 
     public:
 
@@ -52,8 +54,6 @@ namespace mystd{
 
         MyString& operator=(MyString&& s); //move assigment
 
-        void swap(MyString& s); // swap function for copy-and-swap idiom
-
         MyString operator+(MyString& s);
 
         MyString operator+(const char sen[]);
@@ -78,7 +78,7 @@ namespace mystd{
 
         bool operator!=(const MyString &s) const;
 
-        std::weak_ordering operator<=>(const MyString &s) const;
+        std::weak_ordering operator<=>(const MyString &s) const; //since c++20
 
         size_t size() const;
 
