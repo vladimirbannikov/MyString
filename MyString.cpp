@@ -78,9 +78,13 @@ operator=(char c) {
 
 void MyString::
 swap(MyString& s){
-    std::swap(str, s.str);
-    std::swap(sz,s.sz);
-    if(cap < s.cap) std::swap(cap, s.cap);
+    std::swap(sz, s.sz);
+    if(cap < s.cap) {
+        std::swap(str, s.str);
+        std::swap(cap, s.cap);
+    } else {
+        memcpy(str, s.str, s.cap);
+    }
 }
 
 MyString MyString::
