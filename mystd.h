@@ -20,31 +20,31 @@ namespace mystd{
 
         char compareStr(const char *sen1, size_t sen1Size, const char *sen2, size_t sen2Size) const;
 
-        void swap(MyString& s); // swap function for copy-and-swap idiom
+        void swap(MyString& s); 
 
     public:
 
-        MyString() = default; //default constructor
+        MyString() = default; 
 
-        MyString(size_t sz, char ch); //init class with sz of characters
+        MyString(size_t sz, char ch); 
 
-        MyString(const char sen[], size_t len); //init class with count characters of  “char string”
+        MyString(const char sen[], size_t len); 
 
         explicit MyString(const char sen[]);
 
-        MyString(const MyString& s); //copy constructor
+        MyString(const MyString& s); 
 
         explicit MyString(const std::string& s);
 
-        MyString(MyString&& s) noexcept;// move constructor
+        MyString(MyString&& s) noexcept;
 
-        MyString(const std::initializer_list<char>& lst); //initializer list constructor
+        MyString(const std::initializer_list<char>& lst); 
 
-        explicit MyString(size_t sz); //init class with sz of '\0'
+        explicit MyString(size_t sz); 
 
-        ~MyString(); //destructor
+        ~MyString(); 
 
-        MyString& operator=(const MyString& s); //copy assignment
+        MyString& operator=(const MyString& s); 
 
         MyString& operator=(const char sen[]);
 
@@ -52,7 +52,7 @@ namespace mystd{
 
         MyString& operator=(char c);
 
-        MyString& operator=(MyString&& s); //move assigment
+        MyString& operator=(MyString&& s); 
 
         MyString operator+(MyString& s);
 
@@ -78,13 +78,13 @@ namespace mystd{
 
         bool operator!=(const MyString &s) const;
 
-        std::weak_ordering operator<=>(const MyString &s) const; //since c++20
+        std::weak_ordering operator<=>(const MyString &s) const; 
 
         size_t size() const;
 
         size_t length() const;
 
-        const char* data() const; //переделать, чтобы избежать утечки памяти (можно добавить поле - char* tempBuff)
+        const char* data() const; 
 
         const char* c_str() const;
 
@@ -98,7 +98,7 @@ namespace mystd{
 
         friend std::basic_ostream<char>& operator<<(std::basic_ostream<char>& out, const MyString& s);
 
-        friend std::basic_istream<char>& operator>>(std::basic_istream<char>& in, MyString& s); //переделать
+        friend std::basic_istream<char>& operator>>(std::basic_istream<char>& in, MyString& s); 
 
         int insert(size_t index, size_t count, char c);
 
